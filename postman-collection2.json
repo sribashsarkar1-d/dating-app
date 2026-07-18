@@ -1,0 +1,364 @@
+{
+    "info": {
+        "name": "Dating App API - Final",
+        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    },
+    "item": [
+        {
+            "name": "1. Registration",
+            "item": [
+                {
+                    "name": "1. Send OTP",
+                    "request": {
+                        "method": "POST",
+                        "header": [],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"email\": \"{{email}}\"\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/send-otp.php",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "send-otp.php"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "2. Resend OTP",
+                    "request": {
+                        "method": "POST",
+                        "header": [],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"email\": \"{{email}}\"\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/resend-otp.php",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "resend-otp.php"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "3. Verify OTP",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "var jsonData = pm.response.json();",
+                                    "if (jsonData.data && jsonData.data.registration_token) {",
+                                    "    pm.collectionVariables.set(\"registration_token\", jsonData.data.registration_token);",
+                                    "}"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "POST",
+                        "header": [],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"email\": \"{{email}}\",\n    \"otp\": \"123456\"\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/verify-otp.php",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "verify-otp.php"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "4. Upload Photo",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "var jsonData = pm.response.json();",
+                                    "if (jsonData.data && jsonData.data.filenames) {",
+                                    "    pm.collectionVariables.set(\"photo_filenames\", JSON.stringify(jsonData.data.filenames));",
+                                    "}"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "POST",
+                        "header": [],
+                        "body": {
+                            "mode": "formdata",
+                            "formdata": [
+                                {
+                                    "key": "photos[]",
+                                    "type": "file",
+                                    "src": []
+                                }
+                            ]
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/upload-photo.php",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "upload-photo.php"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "5. Final Register",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{registration_token}}",
+                                "type": "text"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"first_name\": \"John\",\n    \"last_name\": \"Doe\",\n    \"birth_date\": \"1995-08-15\",\n    \"gender_identity_id\": 1,\n    \"photo_filenames\": {{photo_filenames}}\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/register.php",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "register.php"
+                            ]
+                        }
+                    },
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "var jsonData = pm.response.json();",
+                                    "if (jsonData.data && jsonData.data.auth_token) {",
+                                    "    pm.collectionVariables.set(\"auth_token\", jsonData.data.auth_token);",
+                                    "}"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "2. Authentication",
+            "item": [
+                {
+                    "name": "6. Login Send OTP",
+                    "request": {
+                        "method": "POST",
+                        "header": [],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"email\": \"{{email}}\"\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/login-send-otp.php",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "login-send-otp.php"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "7. Login Verify OTP",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "var jsonData = pm.response.json();",
+                                    "if (jsonData.data && jsonData.data.auth_token) {",
+                                    "    pm.collectionVariables.set(\"auth_token\", jsonData.data.auth_token);",
+                                    "}"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "POST",
+                        "header": [],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"email\": \"{{email}}\",\n    \"otp\": \"123456\"\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/login-verify-otp.php",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "login-verify-otp.php"
+                            ]
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "3. Users",
+            "item": [
+                {
+                    "name": "8. Get Current User",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{auth_token}}",
+                                "type": "text"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/get-current-user.php",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "get-current-user.php"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "9. Get All Users",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{auth_token}}",
+                                "type": "text"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/get-all-users.php?page=1&limit=20",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "get-all-users.php"
+                            ],
+                            "query": [
+                                {
+                                    "key": "page",
+                                    "value": "1"
+                                },
+                                {
+                                    "key": "limit",
+                                    "value": "20"
+                                }
+                            ]
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "4. Master Data",
+            "item": [
+                {
+                    "name": "10. Get All Master Data",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/master/all-master-data.php",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "master",
+                                "all-master-data.php"
+                            ]
+                        }
+                    }
+                }
+            ]
+        }
+    ],
+    "variable": [
+        {
+            "key": "base_url",
+            "value": "http://localhost/dating-api-point/api",
+            "type": "string"
+        },
+        {
+            "key": "email",
+            "value": "sribashsarkarblp@gmail.com",
+            "type": "string"
+        },
+        {
+            "key": "registration_token",
+            "value": "",
+            "type": "string"
+        },
+        {
+            "key": "photo_filenames",
+            "value": "[]",
+            "type": "string"
+        },
+        {
+            "key": "auth_token",
+            "value": "",
+            "type": "string"
+        }
+    ]
+}
