@@ -1,9 +1,9 @@
 <?php
 
 return [
-    'host' => 'sql107.infinityfree.com',
-    'dbname' => 'if0_42441861_if0_42441861_',
-    'user' => 'if0_42441861',
-    'password' => 'x2awMVh1J291',
+    'host' => 'sql3.freesqldatabase.com',
+    'dbname' => 'sql3833360',
+    'user' => 'sql3833360',
+    'password' => 'HiqxHu7rJ2',
     'charset' => 'utf8mb4'
 ];
