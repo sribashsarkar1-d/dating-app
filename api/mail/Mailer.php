@@ -1,51 +1,72 @@
 <?php
 namespace Api\Mail;
 
-require_once __DIR__ . '/../../vendor/autoload.php';
-
-use PHPMailer\PHPMailer\PHPMailer;
-use PHPMailer\PHPMailer\Exception;
-
 class Mailer {
-    private $mail;
+    private $config;
 
     public function __construct() {
-        $config = require __DIR__ . '/../../config/smtp.php';
-
-        $this->mail = new PHPMailer(true);
-        // Use PHP's native mail() function instead of SMTP
-        $this->mail->isMail(); 
-        $this->mail->setFrom($config['from_email'], $config['from_name']);
-        $this->mail->isHTML(true);
+        $this->config = require __DIR__ . '/../../config/smtp.php';
     }
 
     public function sendOTP($toEmail, $otp) {
-        try {
-            $this->mail->clearAddresses();
-            $this->mail->addAddress($toEmail);
-            $time = date('H:i:s');
-            $this->mail->Subject = "Your Registration OTP - Dating App ({$time})";
-            $this->mail->Body    = "Hello,<br><br>Your OTP for registration is: <b>{$otp}</b><br>It will expire in 5 minutes.<br><br>Thanks,<br>Dating App Team";
-            $this->mail->AltBody = "Hello, Your OTP for registration is: {$otp}. It will expire in 5 minutes.";
-            
-            $this->mail->send();
-            return true;
-        } catch (Exception $e) {
-            return false;
-        }
+        $time = date('H:i:s');
+        $subject = "Your Registration OTP - Dating App ({$time})";
+        $htmlContent = "Hello,<br><br>Your OTP for registration is: <b>{$otp}</b><br>It will expire in 5 minutes.<br><br>Thanks,<br>Dating App Team";
+        
+        return $this->sendViaBrevo($toEmail, $subject, $htmlContent);
     }
 
     public function sendMail($toEmail, $subject, $body) {
-        try {
-            $this->mail->clearAddresses();
-            $this->mail->addAddress($toEmail);
-            $this->mail->Subject = $subject;
-            $this->mail->Body    = $body;
-            $this->mail->AltBody = strip_tags($body);
-            
-            $this->mail->send();
+        return $this->sendViaBrevo($toEmail, $subject, $body);
+    }
+
+    private function sendViaBrevo($toEmail, $subject, $htmlContent) {
+        // We will use Brevo (formerly Sendinblue) HTTP API to send emails
+        // This avoids all SMTP port blocking and disabled mail() function issues on free hosting.
+        
+        $apiKey = $this->config['brevo_api_key'] ?? '';
+        
+        if (empty($apiKey)) {
+            error_log("Brevo API key is missing in config/smtp.php");
+            return false;
+        }
+
+        $url = 'https://api.brevo.com/v3/smtp/email';
+        
+        $data = [
+            'sender' => [
+                'name' => $this->config['from_name'],
+                'email' => $this->config['from_email']
+            ],
+            'to' => [
+                ['email' => $toEmail]
+            ],
+            'subject' => $subject,
+            'htmlContent' => $htmlContent
+        ];
+
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+        curl_setopt($ch, CURLOPT_HTTPHEADER, [
+            'accept: application/json',
+            'api-key: ' . $apiKey,
+            'content-type: application/json'
+        ]);
+        
+        // Disabled SSL verification as free hosts often have outdated SSL CA certificates which breaks curl
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false); 
+
+        $response = curl_exec($ch);
+        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        $error = curl_error($ch);
+        curl_close($ch);
+
+        if ($httpCode >= 200 && $httpCode < 300) {
             return true;
-        } catch (Exception $e) {
+        } else {
+            error_log("Brevo API Error: " . $response . " CURL ERROR: " . $error);
             return false;
         }
     }
