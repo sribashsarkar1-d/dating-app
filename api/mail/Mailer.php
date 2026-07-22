@@ -13,13 +13,8 @@ class Mailer {
         $config = require __DIR__ . '/../../config/smtp.php';
 
         $this->mail = new PHPMailer(true);
-        $this->mail->isSMTP();
-        $this->mail->Host       = $config['host'];
-        $this->mail->SMTPAuth   = true;
-        $this->mail->Username   = $config['username'];
-        $this->mail->Password   = $config['password'];
-        $this->mail->SMTPSecure = $config['encryption'];
-        $this->mail->Port       = $config['port'];
+        // Use PHP's native mail() function instead of SMTP
+        $this->mail->isMail(); 
         $this->mail->setFrom($config['from_email'], $config['from_name']);
         $this->mail->isHTML(true);
     }
