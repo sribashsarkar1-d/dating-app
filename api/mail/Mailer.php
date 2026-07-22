@@ -59,8 +59,7 @@ class Mailer {
             $this->mail->send();
             return true;
         } catch (Exception $e) {
-            error_log("PHPMailer Error: " . $this->mail->ErrorInfo);
-            return false;
+            throw new \Exception("PHPMailer Error: " . $this->mail->ErrorInfo);
         }
     }
 
@@ -99,8 +98,7 @@ class Mailer {
         if ($httpCode >= 200 && $httpCode < 300) {
             return true;
         } else {
-            error_log("Brevo API Error: " . $response . " CURL ERROR: " . $error);
-            return false;
+            throw new \Exception("Brevo API Error: " . $response . " | CURL ERROR: " . $error);
         }
     }
 }
