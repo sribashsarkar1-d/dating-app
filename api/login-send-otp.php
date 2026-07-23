@@ -48,11 +48,12 @@ try {
     // Generate new OTP
     $otp = Token::generateOTP();
     $otpHash = Token::hashOTP($otp);
+    $uuid = Token::generateUUID();
     $expiresAt = date('Y-m-d H:i:s', time() + (10 * 60)); // 10 mins expiry
 
     $db->query(
-        "INSERT INTO otps (user_id, type, identifier, code_hash, expires_at, created_at, updated_at) VALUES (?, 'LOGIN', ?, ?, ?, NOW(), NOW())",
-        [$userId, $email, $otpHash, $expiresAt]
+        "INSERT INTO otps (uuid, user_id, type, identifier, code_hash, expires_at, created_at, updated_at) VALUES (?, ?, 'LOGIN', ?, ?, ?, NOW(), NOW())",
+        [$uuid, $userId, $email, $otpHash, $expiresAt]
     );
 
     // Send email

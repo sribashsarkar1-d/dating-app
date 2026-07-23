@@ -54,7 +54,7 @@ try {
     // We could add it, or we just rely on expiration. Since the user wanted 5 attempts for registration,
     // we assume similar logic. But without modifying the otps schema, we will just check validity.
 
-    if ($otpRecord['code_hash'] !== $otpHash) {
+    if (!hash_equals($otpRecord['code_hash'], $otpHash)) {
         Response::error('Invalid OTP.', 400);
     }
     
