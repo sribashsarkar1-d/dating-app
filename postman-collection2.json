@@ -414,6 +414,398 @@
                     }
                 }
             ]
+        },
+        {
+            "name": "Explore Module",
+            "item": [
+                {
+                    "name": "1. Home",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}",
+                                "type": "text"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/api/explore/home.php",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "api",
+                                "explore",
+                                "home.php"
+                            ],
+                            "query": []
+                        }
+                    }
+                },
+                {
+                    "name": "2. Nearby",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}",
+                                "type": "text"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/api/explore/nearby.php?latitude=12.34&longitude=56.78&distance=50",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "api",
+                                "explore",
+                                "nearby.php"
+                            ],
+                            "query": [
+                                {
+                                    "key": "latitude",
+                                    "value": "12.34"
+                                },
+                                {
+                                    "key": "longitude",
+                                    "value": "56.78"
+                                },
+                                {
+                                    "key": "distance",
+                                    "value": "50"
+                                }
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "3. Recommendations",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}",
+                                "type": "text"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/api/explore/recommendations.php",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "api",
+                                "explore",
+                                "recommendations.php"
+                            ],
+                            "query": []
+                        }
+                    }
+                },
+                {
+                    "name": "4. Trending",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}",
+                                "type": "text"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/api/explore/trending.php",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "api",
+                                "explore",
+                                "trending.php"
+                            ],
+                            "query": []
+                        }
+                    }
+                },
+                {
+                    "name": "5. Online",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}",
+                                "type": "text"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/api/explore/online.php",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "api",
+                                "explore",
+                                "online.php"
+                            ],
+                            "query": []
+                        }
+                    }
+                },
+                {
+                    "name": "6. Verified",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}",
+                                "type": "text"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/api/explore/verified.php",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "api",
+                                "explore",
+                                "verified.php"
+                            ],
+                            "query": []
+                        }
+                    }
+                },
+                {
+                    "name": "7. Premium",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}",
+                                "type": "text"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/api/explore/premium.php",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "api",
+                                "explore",
+                                "premium.php"
+                            ],
+                            "query": []
+                        }
+                    }
+                },
+                {
+                    "name": "8. New Members",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}",
+                                "type": "text"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/api/explore/new_members.php",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "api",
+                                "explore",
+                                "new_members.php"
+                            ],
+                            "query": []
+                        }
+                    }
+                },
+                {
+                    "name": "9. Popular",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}",
+                                "type": "text"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/api/explore/popular.php",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "api",
+                                "explore",
+                                "popular.php"
+                            ],
+                            "query": []
+                        }
+                    }
+                },
+                {
+                    "name": "10. Daily Picks",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}",
+                                "type": "text"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/api/explore/daily_picks.php",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "api",
+                                "explore",
+                                "daily_picks.php"
+                            ],
+                            "query": []
+                        }
+                    }
+                },
+                {
+                    "name": "11. Interests",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}",
+                                "type": "text"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/api/explore/interests.php",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "api",
+                                "explore",
+                                "interests.php"
+                            ],
+                            "query": []
+                        }
+                    }
+                },
+                {
+                    "name": "12. Search",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}",
+                                "type": "text"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/api/explore/search.php?q=Developer",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "api",
+                                "explore",
+                                "search.php"
+                            ],
+                            "query": [
+                                {
+                                    "key": "q",
+                                    "value": "Developer"
+                                }
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "13. Filter",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}",
+                                "type": "text"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json",
+                                "type": "text"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/api/explore/filter.php",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "api",
+                                "explore",
+                                "filter.php"
+                            ],
+                            "query": []
+                        },
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"age_min\": 18,\n    \"age_max\": 35,\n    \"distance\": 50,\n    \"verified_only\": 1,\n    \"sort_by\": \"popular\"\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        }
+                    }
+                },
+                {
+                    "name": "14. Profile",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}",
+                                "type": "text"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/api/explore/profile.php?id=2",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "api",
+                                "explore",
+                                "profile.php"
+                            ],
+                            "query": [
+                                {
+                                    "key": "id",
+                                    "value": "2"
+                                }
+                            ]
+                        }
+                    }
+                }
+            ]
         }
     ],
     "variable": [

@@ -1,0 +1,204 @@
+﻿CREATE TABLE `education_levels` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `uuid` char(36) NOT NULL DEFAULT uuid(),
+  `name` varchar(100) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `deleted_at` timestamp NULL DEFAULT NULL
+) ENGINE
+
+CREATE TABLE `email_verifications` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `uuid` char(36) NOT NULL,
+  `email` varchar(255) NOT NULL,
+  `otp_hash` varchar(255) NOT NULL,
+  `verify_attempts` tinyint(3) UNSIGNED NOT NULL DEFAULT 0,
+  `resend_attempts` tinyint(3) UNSIGNED NOT NULL DEFAULT 0,
+  `expires_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `is_verified` tinyint(1) NOT NULL DEFAULT 0,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE
+
+CREATE TABLE `otps` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `uuid` char(36) NOT NULL DEFAULT uuid(),
+  `user_id` bigint(20) UNSIGNED DEFAULT NULL,
+  `type` enum('EMAIL_VERIFICATION','PHONE_VERIFICATION','PASSWORD_RESET','LOGIN') NOT NULL,
+  `identifier` varchar(255) NOT NULL COMMENT 'Email or Phone',
+  `code_hash` varchar(255) NOT NULL,
+  `expires_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `is_used` tinyint(1) DEFAULT 0,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE
+
+CREATE TABLE `political_views` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `uuid` char(36) NOT NULL DEFAULT uuid(),
+  `name` varchar(100) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `deleted_at` timestamp NULL DEFAULT NULL
+) ENGINE
+
+CREATE TABLE `registration_tokens` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `uuid` char(36) NOT NULL,
+  `email` varchar(255) NOT NULL,
+  `token_hash` varchar(255) NOT NULL,
+  `expires_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `is_used` tinyint(1) NOT NULL DEFAULT 0,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE
+
+CREATE TABLE `religions` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `uuid` char(36) NOT NULL DEFAULT uuid(),
+  `name` varchar(100) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `deleted_at` timestamp NULL DEFAULT NULL
+) ENGINE
+
+CREATE TABLE `users` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `uuid` char(36) NOT NULL DEFAULT uuid(),
+  `first_name` varchar(100) NOT NULL,
+  `last_name` varchar(100) DEFAULT NULL,
+  `display_name` varchar(100) NOT NULL,
+  `email` varchar(255) NOT NULL,
+  `phone` varchar(20) DEFAULT NULL,
+  `birth_date` date NOT NULL,
+  `age` int(11) GENERATED ALWAYS AS (timestampdiff(YEAR,`birth_date`,curdate())) VIRTUAL,
+  `gender_identity_id` bigint(20) UNSIGNED DEFAULT NULL,
+  `interested_in_id` bigint(20) UNSIGNED DEFAULT NULL,
+  `relationship_goal_id` bigint(20) UNSIGNED DEFAULT NULL,
+  `status` enum('ACTIVE','BANNED','SUSPENDED','DELETED','PENDING_VERIFICATION') DEFAULT 'PENDING_VERIFICATION',
+  `onboarding_completed` tinyint(1) DEFAULT 0,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `deleted_at` timestamp NULL DEFAULT NULL
+) ENGINE
+
+CREATE TABLE `user_hobbies` (
+  `user_id` bigint(20) UNSIGNED NOT NULL,
+  `hobby_id` bigint(20) UNSIGNED NOT NULL
+) ENGINE
+
+CREATE TABLE `user_interests` (
+  `user_id` bigint(20) UNSIGNED NOT NULL,
+  `interest_id` bigint(20) UNSIGNED NOT NULL
+) ENGINE
+
+CREATE TABLE `user_languages` (
+  `user_id` bigint(20) UNSIGNED NOT NULL,
+  `language_id` bigint(20) UNSIGNED NOT NULL
+) ENGINE
+
+CREATE TABLE `user_match_preferences` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `uuid` char(36) NOT NULL DEFAULT uuid(),
+  `user_id` bigint(20) UNSIGNED NOT NULL,
+  `preferred_age_min` int(11) NOT NULL DEFAULT 18,
+  `preferred_age_max` int(11) NOT NULL DEFAULT 99,
+  `distance_radius_km` int(11) NOT NULL DEFAULT 50,
+  `interested_gender_id` bigint(20) UNSIGNED DEFAULT NULL,
+  `height_min_cm` int(11) DEFAULT NULL,
+  `height_max_cm` int(11) DEFAULT NULL,
+  `education_id` bigint(20) UNSIGNED DEFAULT NULL,
+  `religion_id` bigint(20) UNSIGNED DEFAULT NULL,
+  `smoking_id` bigint(20) UNSIGNED DEFAULT NULL,
+  `drinking_id` bigint(20) UNSIGNED DEFAULT NULL,
+  `relationship_goal_id` bigint(20) UNSIGNED DEFAULT NULL,
+  `online_only` tinyint(1) DEFAULT 0,
+  `verified_users_only` tinyint(1) DEFAULT 0,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `user_movie_genres`
+--
+
+CREATE TABLE `user_movie_genres` (
+  `user_id` bigint(20) UNSIGNED NOT NULL,
+  `movie_genre_id` bigint(20) UNSIGNED NOT NULL
+) ENGINE
+
+CREATE TABLE `user_photos` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `uuid` char(36) NOT NULL DEFAULT uuid(),
+  `user_id` bigint(20) UNSIGNED NOT NULL,
+  `photo_url` varchar(500) NOT NULL,
+  `thumbnail_url` varchar(500) DEFAULT NULL,
+  `blurhash` varchar(100) DEFAULT NULL,
+  `display_order` int(11) NOT NULL DEFAULT 0,
+  `is_main` tinyint(1) DEFAULT 0,
+  `is_verified_photo` tinyint(1) DEFAULT 0,
+  `metadata` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL COMMENT 'Store width, height, face_coordinates' CHECK (json_valid(`metadata`)),
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `deleted_at` timestamp NULL DEFAULT NULL
+) ENGINE
+
+CREATE TABLE `user_preference_children` (
+  `user_id` bigint(20) UNSIGNED NOT NULL,
+  `children_id` bigint(20) UNSIGNED NOT NULL
+) ENGINE
+
+CREATE TABLE `user_preference_languages` (
+  `user_id` bigint(20) UNSIGNED NOT NULL,
+  `language_id` bigint(20) UNSIGNED NOT NULL
+) ENGINE
+
+CREATE TABLE `user_preference_pets` (
+  `user_id` bigint(20) UNSIGNED NOT NULL,
+  `pets_id` bigint(20) UNSIGNED NOT NULL
+) ENGINE
+
+CREATE TABLE `user_preference_politics` (
+  `user_id` bigint(20) UNSIGNED NOT NULL,
+  `political_view_id` bigint(20) UNSIGNED NOT NULL
+) ENGINE
+
+CREATE TABLE `user_profiles` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `uuid` char(36) NOT NULL DEFAULT uuid(),
+  `user_id` bigint(20) UNSIGNED NOT NULL,
+  `bio` text DEFAULT NULL,
+  `height_cm` int(11) DEFAULT NULL,
+  `weight_kg` decimal(5,2) DEFAULT NULL,
+  `hometown` varchar(255) DEFAULT NULL,
+  `current_city_id` bigint(20) UNSIGNED DEFAULT NULL,
+  `country_id` bigint(20) UNSIGNED DEFAULT NULL,
+  `base_latitude` decimal(10,8) DEFAULT NULL,
+  `base_longitude` decimal(11,8) DEFAULT NULL,
+  `education_id` bigint(20) UNSIGNED DEFAULT NULL,
+  `occupation_id` bigint(20) UNSIGNED DEFAULT NULL,
+  `company` varchar(255) DEFAULT NULL,
+  `religion_id` bigint(20) UNSIGNED DEFAULT NULL,
+  `political_view_id` bigint(20) UNSIGNED DEFAULT NULL,
+  `smoking_id` bigint(20) UNSIGNED DEFAULT NULL,
+  `drinking_id` bigint(20) UNSIGNED DEFAULT NULL,
+  `fitness_id` bigint(20) UNSIGNED DEFAULT NULL,
+  `sleep_id` bigint(20) UNSIGNED DEFAULT NULL,
+  `diet_id` bigint(20) UNSIGNED DEFAULT NULL,
+  `pets_id` bigint(20) UNSIGNED DEFAULT NULL,
+  `children_id` bigint(20) UNSIGNED DEFAULT NULL,
+  `love_language_id` bigint(20) UNSIGNED DEFAULT NULL,
+  `communication_style_id` bigint(20) UNSIGNED DEFAULT NULL,
+  `personality_type` varchar(10) DEFAULT NULL COMMENT 'e.g. INTJ, ENFP',
+  `zodiac` varchar(50) DEFAULT NULL,
+  `spotify_anthem_url` varchar(255) DEFAULT NULL,
+  `instagram_username` varchar(255) DEFAULT NULL,
+  `website` varchar(255) DEFAULT NULL,
+  `compatibility_score_base` int(11) DEFAULT 50 COMMENT 'Base index for ML model scoring',
+  `is_verified` tinyint(1) DEFAULT 0,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE
+
