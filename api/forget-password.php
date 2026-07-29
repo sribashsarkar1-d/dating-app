@@ -73,7 +73,7 @@ try {
     $host = $_SERVER['HTTP_HOST'] ?? 'localhost';
     
     // You may adjust this frontend link according to your frontend application routes
-    $resetLink = "{$protocol}://{$host}/reset-password?token={$token}&email=" . urlencode($email);
+    $resetLink = "{$protocol}://{$host}/reset-password.php?token={$token}&email=" . urlencode($email);
 
     // Send email
     $mailer = new Mailer();
