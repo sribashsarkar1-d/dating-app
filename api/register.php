@@ -58,8 +58,94 @@ try {
     $lastName = Validator::sanitizeString($input['last_name'] ?? null);
     $dob = Validator::sanitizeString($input['birth_date'] ?? '');
     
-    if (!$firstName || !$dob) {
-        Response::error('First name and birth date are required.', 400);
+    $errors = [];
+    if (!$firstName) $errors['first_name'] = 'Required';
+    if (!$dob) $errors['birth_date'] = 'Required';
+    
+    $showMe = Validator::sanitizeString($input['show_me'] ?? '');
+    if (!$showMe) $errors['show_me'] = 'Required';
+    
+    $height = $input['height'] ?? null;
+    if ($height !== null && !is_numeric($height)) {
+        $errors['height'] = 'Must be numeric';
+    }
+    
+    $zodiacSign = Validator::sanitizeString($input['zodiac_sign'] ?? null);
+    $hometown = Validator::sanitizeString($input['hometown'] ?? null);
+    $languageSpoken = Validator::sanitizeString($input['language_spoken'] ?? null);
+    $jobTitle = Validator::sanitizeString($input['job_title'] ?? null);
+    $company = Validator::sanitizeString($input['company'] ?? null);
+
+    $profilePrompts = $input['profile_prompts'] ?? [];
+    if (!is_array($profilePrompts)) $errors['profile_prompts'] = 'Must be an array';
+    
+    $openingMoves = $input['opening_moves'] ?? [];
+    if (!is_array($openingMoves)) $errors['opening_moves'] = 'Must be an array';
+    
+    $customOpeningMoves = $input['custom_opening_moves'] ?? [];
+    if (!is_array($customOpeningMoves)) $errors['custom_opening_moves'] = 'Must be an array';
+    
+    $db = Database::getInstance();
+    $conn = $db->getConnection();
+    
+    // Validate profile prompts
+    if (is_array($profilePrompts)) {
+        $promptIds = [];
+        foreach ($profilePrompts as $index => $prompt) {
+            $qId = $prompt['question_id'] ?? null;
+            $ans = trim($prompt['answer'] ?? '');
+            if (!$qId) {
+                $errors["profile_prompts.{$index}.question_id"] = 'Required';
+            } else {
+                if (in_array($qId, $promptIds)) {
+                    $errors["profile_prompts.{$index}.question_id"] = 'Duplicate question';
+                } else {
+                    $promptIds[] = $qId;
+                    $isValid = $db->fetch("SELECT id FROM profile_prompt_questions WHERE id = ? AND status = 'ACTIVE'", [$qId]);
+                    if (!$isValid) {
+                        $errors["profile_prompts.{$index}.question_id"] = 'Invalid question.';
+                    }
+                }
+            }
+            if (!$ans) $errors["profile_prompts.{$index}.answer"] = 'Required';
+        }
+    }
+    
+    // Validate opening moves
+    if (is_array($openingMoves)) {
+        $moveIds = [];
+        foreach ($openingMoves as $index => $move) {
+            $qId = $move['question_id'] ?? null;
+            $ans = trim($move['answer'] ?? '');
+            if (!$qId) {
+                $errors["opening_moves.{$index}.question_id"] = 'Required';
+            } else {
+                if (in_array($qId, $moveIds)) {
+                    $errors["opening_moves.{$index}.question_id"] = 'Duplicate question';
+                } else {
+                    $moveIds[] = $qId;
+                    $isValid = $db->fetch("SELECT id FROM opening_move_questions WHERE id = ? AND status = 'ACTIVE'", [$qId]);
+                    if (!$isValid) {
+                        $errors["opening_moves.{$index}.question_id"] = 'Invalid question.';
+                    }
+                }
+            }
+            if (!$ans) $errors["opening_moves.{$index}.answer"] = 'Required';
+        }
+    }
+    
+    // Validate custom opening moves
+    if (is_array($customOpeningMoves)) {
+        foreach ($customOpeningMoves as $index => $customMove) {
+            $q = trim($customMove['question'] ?? '');
+            $ans = trim($customMove['answer'] ?? '');
+            if (!$q) $errors["custom_opening_moves.{$index}.question"] = 'Required';
+            if (!$ans) $errors["custom_opening_moves.{$index}.answer"] = 'Required';
+        }
+    }
+
+    if (!empty($errors)) {
+        Response::error('Validation failed.', 400, ['errors' => $errors]);
     }
     
     $age = Validator::getAgeFromDob($dob);
@@ -116,10 +202,34 @@ try {
         
         // Update Profile (Trigger already created the row)
         $db->query(
-            "UPDATE user_profiles SET bio = ?, education_id = ?, religion_id = ?, political_view_id = ?, smoking_id = ?, drinking_id = ?, fitness_id = ?, sleep_id = ?, diet_id = ?, children_id = ?, communication_style_id = ?, is_verified = 0, updated_at = NOW() 
+            "UPDATE user_profiles SET bio = ?, education_id = ?, religion_id = ?, political_view_id = ?, smoking_id = ?, drinking_id = ?, fitness_id = ?, sleep_id = ?, diet_id = ?, children_id = ?, communication_style_id = ?, is_verified = 0, zodiac_sign = ?, show_me = ?, height_cm = ?, hometown = ?, language_spoken = ?, job_title = ?, company = ?, updated_at = NOW() 
              WHERE user_id = ?",
-            [$bio, $educationId, $religionId, $politicalViewId, $smokingId, $drinkingId, $fitnessId, $sleepId, $dietId, $childrenId, $connStyleId, $userId]
+            [$bio, $educationId, $religionId, $politicalViewId, $smokingId, $drinkingId, $fitnessId, $sleepId, $dietId, $childrenId, $connStyleId, $zodiacSign, $showMe, $height, $hometown, $languageSpoken, $jobTitle, $company, $userId]
         );
+        
+        // Save Profile Prompts
+        if (!empty($profilePrompts)) {
+            $promptStmt = $conn->prepare("INSERT INTO user_profile_prompts (user_id, question_id, answer, created_at) VALUES (?, ?, ?, NOW())");
+            foreach ($profilePrompts as $prompt) {
+                $promptStmt->execute([$userId, $prompt['question_id'], trim($prompt['answer'])]);
+            }
+        }
+        
+        // Save Opening Moves
+        if (!empty($openingMoves)) {
+            $moveStmt = $conn->prepare("INSERT INTO user_opening_moves (user_id, question_id, answer, created_at) VALUES (?, ?, ?, NOW())");
+            foreach ($openingMoves as $move) {
+                $moveStmt->execute([$userId, $move['question_id'], trim($move['answer'])]);
+            }
+        }
+        
+        // Save Custom Opening Moves
+        if (!empty($customOpeningMoves)) {
+            $customMoveStmt = $conn->prepare("INSERT INTO user_opening_moves (user_id, custom_question, answer, created_at) VALUES (?, ?, ?, NOW())");
+            foreach ($customOpeningMoves as $customMove) {
+                $customMoveStmt->execute([$userId, trim($customMove['question']), trim($customMove['answer'])]);
+            }
+        }
         
         // Process Photos
         if (!empty($tempPhotoNames)) {

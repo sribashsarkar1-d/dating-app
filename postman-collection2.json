@@ -149,7 +149,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\n    \"first_name\": \"John\",\n    \"last_name\": \"Doe\",\n    \"birth_date\": \"1995-08-15\",\n    \"gender_identity_id\": 1,\n    \"photo_filenames\": {{photo_filenames}}\n}",
+                            "raw": "{\n    \"first_name\": \"John\",\n    \"last_name\": \"Doe\",\n    \"birth_date\": \"1995-08-15\",\n    \"gender_identity_id\": 1,\n    \"photo_filenames\": {{photo_filenames}},\n    \"zodiac_sign\": \"Leo\",\n    \"show_me\": \"Women\",\n    \"height\": \"175\",\n    \"hometown\": \"Kolkata\",\n    \"language_spoken\": \"English,Bengali\",\n    \"job_title\": \"Software Engineer\",\n    \"company\": \"ABC Technologies\",\n    \"profile_prompts\": [\n        {\n            \"question_id\": 1,\n            \"answer\": \"Always smiling.\"\n        }\n    ],\n    \"opening_moves\": [\n        {\n            \"question_id\": 2,\n            \"answer\": \"Coffee\"\n        }\n    ],\n    \"custom_opening_moves\": [\n        {\n            \"question\": \"What makes you laugh the most?\",\n            \"answer\": \"Funny memes.\"\n        }\n    ]\n}",
                             "options": {
                                 "raw": {
                                     "language": "json"
@@ -180,6 +180,38 @@
                             }
                         }
                     ]
+                },
+                {
+                    "name": "Get Profile Prompts",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/profile-prompts.php",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "profile-prompts.php"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Get Opening Moves",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/opening-moves.php",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "opening-moves.php"
+                            ]
+                        }
+                    }
                 }
             ]
         },
