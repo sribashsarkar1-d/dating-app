@@ -66,7 +66,9 @@ try {
         
         $db->query(
             "INSERT INTO registration_tokens (uuid, email, token_hash, expires_at, is_used, created_at, updated_at) 
-             VALUES (?, ?, ?, DATE_ADD(NOW(), INTERVAL 24 HOUR), 0, NOW(), NOW())",
+             VALUES (?, ?, ?, DATE_ADD(NOW(), INTERVAL 24 HOUR), 0, NOW(), NOW())
+             ON DUPLICATE KEY UPDATE 
+             uuid = VALUES(uuid), token_hash = VALUES(token_hash), expires_at = VALUES(expires_at), is_used = 0, updated_at = NOW()",
             [$uuid, $email, $hashedRegToken]
         );
         
