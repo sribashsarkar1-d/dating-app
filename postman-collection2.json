@@ -249,6 +249,56 @@
                             ]
                         }
                     }
+                },
+                {
+                    "name": "Login Resend OTP",
+                    "request": {
+                        "method": "POST",
+                        "header": [],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"email\": \"{{email}}\"\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/resend-login-otp.php",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "resend-login-otp.php"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Forget Password",
+                    "request": {
+                        "method": "POST",
+                        "header": [],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"email\": \"{{email}}\"\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/forget-password.php",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "forget-password.php"
+                            ]
+                        }
+                    }
                 }
             ]
         },

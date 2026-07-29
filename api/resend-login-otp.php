@@ -12,14 +12,14 @@ use Api\Helper\Token;
 use Api\Mail\Mailer;
 
 header("Access-Control-Allow-Origin: *");
-header("Access-Control-Allow-Methods: POST");
+header("Access-Control-Allow-Methods: POST, GET");
 header("Access-Control-Allow-Headers: Content-Type");
 
-if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+if ($_SERVER['REQUEST_METHOD'] !== 'POST' && $_SERVER['REQUEST_METHOD'] !== 'GET') {
     Response::error('Method not allowed', 405);
 }
 
-$input = json_decode(file_get_contents('php://input'), true) ?? $_POST;
+$input = json_decode(file_get_contents('php://input'), true) ?? $_POST ?? $_GET;
 $email = Validator::sanitizeEmail($input['email'] ?? '');
 
 if (!$email || !Validator::isValidEmail($email)) {
