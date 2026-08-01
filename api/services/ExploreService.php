@@ -15,8 +15,8 @@ class ExploreService {
         
         return "
             SELECT 
-                u.id, u.first_name, u.birth_date, u.age, u.is_premium, u.last_seen,
-                up.bio, up.height_cm, up.hometown, up.job_title, up.company, up.is_verified, up.base_latitude, up.base_longitude, up.zodiac_sign, up.language_spoken
+                u.id, u.first_name, u.display_name, u.birth_date, u.age, u.is_premium, u.last_seen,
+                up.bio, up.height_cm, up.hometown, up.job_title, up.company, up.education_id, up.is_verified, up.base_latitude, up.base_longitude, up.zodiac_sign, up.language_spoken
             FROM users u
             JOIN user_profiles up ON u.id = up.user_id
             WHERE u.id != {$currentUserId}
