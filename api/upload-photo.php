@@ -55,17 +55,17 @@ for ($i = 0; $i < $fileCount; $i++) {
     }
 
     $ext = pathinfo($name, PATHINFO_EXTENSION);
+    if (empty($ext)) $ext = 'png'; // Fallback extension
     $filename = uniqid('temp_') . '_' . time() . '_' . $i . '.' . $ext;
-    $targetFile = $targetDir . $filename;
-
-    $moveResult = move_uploaded_file($tmpName, $targetFile);
-    $lastError = error_get_last();
     
-    // Save this for the debug output later!
-    $_FILES['photos']['move_result'][$i] = $moveResult;
-    $_FILES['photos']['move_error'][$i] = $lastError;
+    // Normalize path for Windows
+    $targetDirNormalized = str_replace(['\\', '/'], DIRECTORY_SEPARATOR, $targetDir);
+    $targetFile = $targetDirNormalized . $filename;
 
-    if ($moveResult) {
+    if (move_uploaded_file($tmpName, $targetFile)) {
+        $uploadedFilenames[] = $filename;
+    } else if (copy($tmpName, $targetFile)) {
+        // Fallback for XAMPP Windows permission/temp folder quirks
         $uploadedFilenames[] = $filename;
     }
 }
