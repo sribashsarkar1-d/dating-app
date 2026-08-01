@@ -15,7 +15,7 @@ if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
 
 try {
     $db = Database::getInstance();
-    $prompts = $db->fetchAll("SELECT id, question FROM profile_prompt_questions WHERE status = 'ACTIVE' ORDER BY sort_order ASC, id ASC");
+    $prompts = $db->fetchAll("SELECT id, prompt_text as question FROM profile_prompts WHERE deleted_at IS NULL ORDER BY id ASC");
     
     // Formatting data as expected by the prompt
     $data = [];
