@@ -6,17 +6,24 @@ class SearchService {
     /**
      * Get SQL where clause for searching
      */
-    public static function getSearchWhereClause($query) {
+    public static function getSearchWhereClause($query, &$params) {
         if (empty($query)) return "";
         
-        // Prevent SQL injection by escaping properly in PDO, but here we build the query part
+        $term = '%' . $query . '%';
+        $params['search1'] = $term;
+        $params['search2'] = $term;
+        $params['search3'] = $term;
+        $params['search4'] = $term;
+        $params['search5'] = $term;
+        $params['search6'] = $term;
+
         return " AND (
-            first_name LIKE :search 
-            OR display_name LIKE :search 
-            OR hometown LIKE :search 
-            OR job_title LIKE :search 
-            OR company LIKE :search 
-            OR language_spoken LIKE :search
+            first_name LIKE :search1 
+            OR display_name LIKE :search2 
+            OR hometown LIKE :search3 
+            OR job_title LIKE :search4 
+            OR company LIKE :search5 
+            OR language_spoken LIKE :search6
         )";
     }
 }

@@ -29,10 +29,8 @@ try {
     }
     
     $baseQuery = ExploreService::getBaseExploreQuery($userId);
-    $searchWhere = SearchService::getSearchWhereClause($queryStr);
-    
-    // We add search string to parameters
-    $params = ['search' => '%' . $queryStr . '%'];
+    $params = [];
+    $searchWhere = SearchService::getSearchWhereClause($queryStr, $params);
     
     $query = "
         SELECT * FROM ($baseQuery) as base_users
