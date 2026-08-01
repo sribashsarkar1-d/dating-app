@@ -11,12 +11,12 @@ class SearchService {
         
         // Prevent SQL injection by escaping properly in PDO, but here we build the query part
         return " AND (
-            u.first_name LIKE :search 
-            OR u.display_name LIKE :search 
-            OR up.hometown LIKE :search 
-            OR up.job_title LIKE :search 
-            OR up.company LIKE :search 
-            OR up.language_spoken LIKE :search
+            first_name LIKE :search 
+            OR display_name LIKE :search 
+            OR hometown LIKE :search 
+            OR job_title LIKE :search 
+            OR company LIKE :search 
+            OR language_spoken LIKE :search
         )";
     }
 }

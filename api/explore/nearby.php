@@ -39,7 +39,7 @@ try {
         $lng = $userLoc['base_longitude'];
     }
 
-    $haversine = DistanceService::getHaversineSQL('up.base_latitude', 'up.base_longitude', $lat, $lng);
+    $haversine = DistanceService::getHaversineSQL('base_latitude', 'base_longitude', $lat, $lng);
     $baseQuery = ExploreService::getBaseExploreQuery($userId);
     
     // Build final query
