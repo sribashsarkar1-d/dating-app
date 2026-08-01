@@ -47,7 +47,7 @@ try {
     if ($userLoc && $userLoc['base_latitude']) {
         $lat = $userLoc['base_latitude'];
         $lng = $userLoc['base_longitude'];
-        $haversine = \Api\Services\DistanceService::getHaversineSQL('up.base_latitude', 'up.base_longitude', $lat, $lng);
+        $haversine = \Api\Services\DistanceService::getHaversineSQL('base_latitude', 'base_longitude', $lat, $lng);
         $query = "SELECT *, ($haversine) as distance FROM ($baseQuery) as base_users HAVING distance <= 50 ORDER BY distance ASC LIMIT 10";
         $data['nearby'] = $fetchUsers($query);
     }
@@ -81,7 +81,7 @@ try {
         // Generate new picks
         $newPicks = $db->fetchAll("SELECT id FROM ($baseQuery) as base_users ORDER BY RAND() LIMIT 10");
         foreach ($newPicks as $pick) {
-            $db->execute("INSERT INTO user_daily_picks (user_id, target_user_id, created_at) VALUES (?, ?, NOW())", [$userId, $pick['id']]);
+            $db->query("INSERT INTO user_daily_picks (user_id, target_user_id, created_at) VALUES (?, ?, NOW())", [$userId, $pick['id']]);
         }
         $existingPicks = $db->fetchAll($picksQuery, [$userId, $today]);
     }
