@@ -27,7 +27,7 @@ try {
         // Generate 10 new picks for today
         $newPicks = $db->fetchAll("SELECT id FROM ($baseQuery) as base_users ORDER BY RAND() LIMIT 10");
         foreach ($newPicks as $pick) {
-            $db->execute("INSERT INTO user_daily_picks (user_id, target_user_id, created_at) VALUES (?, ?, NOW())", [$userId, $pick['id']]);
+            $db->query("INSERT INTO user_daily_picks (user_id, target_user_id, created_at) VALUES (?, ?, NOW())", [$userId, $pick['id']]);
         }
         $existingPicks = $db->fetchAll($picksQuery, [$userId, $today]);
     }
