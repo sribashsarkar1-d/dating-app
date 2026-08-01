@@ -68,5 +68,15 @@ if (count($uploadedFilenames) > 0) {
         'filenames' => $uploadedFilenames
     ]);
 } else {
-    Response::error('Failed to save uploaded photos or no valid photos provided.', 400);
+    $debugInfo = [];
+    for ($j = 0; $j < $fileCount; $j++) {
+        $debugInfo[] = [
+            'name' => $_FILES['photos']['name'][$j] ?? null,
+            'error' => $_FILES['photos']['error'][$j] ?? null,
+            'type' => $_FILES['photos']['type'][$j] ?? null,
+            'size' => $_FILES['photos']['size'][$j] ?? null,
+            'allowed' => isset($_FILES['photos']['type'][$j]) ? in_array($_FILES['photos']['type'][$j], $allowedTypes) : false
+        ];
+    }
+    Response::error('Failed to save uploaded photos or no valid photos provided.', 400, ['debug' => $debugInfo]);
 }
