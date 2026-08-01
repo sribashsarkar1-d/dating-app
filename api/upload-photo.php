@@ -58,7 +58,14 @@ for ($i = 0; $i < $fileCount; $i++) {
     $filename = uniqid('temp_') . '_' . time() . '_' . $i . '.' . $ext;
     $targetFile = $targetDir . $filename;
 
-    if (move_uploaded_file($tmpName, $targetFile)) {
+    $moveResult = move_uploaded_file($tmpName, $targetFile);
+    $lastError = error_get_last();
+    
+    // Save this for the debug output later!
+    $_FILES['photos']['move_result'][$i] = $moveResult;
+    $_FILES['photos']['move_error'][$i] = $lastError;
+
+    if ($moveResult) {
         $uploadedFilenames[] = $filename;
     }
 }
@@ -72,10 +79,13 @@ if (count($uploadedFilenames) > 0) {
     for ($j = 0; $j < $fileCount; $j++) {
         $debugInfo[] = [
             'name' => $_FILES['photos']['name'][$j] ?? null,
+            'tmp_name' => $_FILES['photos']['tmp_name'][$j] ?? null,
             'error' => $_FILES['photos']['error'][$j] ?? null,
             'type' => $_FILES['photos']['type'][$j] ?? null,
             'size' => $_FILES['photos']['size'][$j] ?? null,
-            'allowed' => isset($_FILES['photos']['type'][$j]) ? in_array($_FILES['photos']['type'][$j], $allowedTypes) : false
+            'allowed' => isset($_FILES['photos']['type'][$j]) ? in_array($_FILES['photos']['type'][$j], $allowedTypes) : false,
+            'move_result' => $_FILES['photos']['move_result'][$j] ?? null,
+            'move_error' => $_FILES['photos']['move_error'][$j] ?? null
         ];
     }
     Response::error('Failed to save uploaded photos or no valid photos provided.', 400, ['debug' => $debugInfo]);
