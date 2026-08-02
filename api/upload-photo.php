@@ -31,7 +31,10 @@ $maxSize = 5 * 1024 * 1024; // 5MB
 $targetDir = __DIR__ . '/uploads/temp/';
 
 if (!is_dir($targetDir)) {
-    mkdir($targetDir, 0755, true);
+    if (!mkdir($targetDir, 0777, true)) {
+        $err = error_get_last();
+        Response::error('Failed to create upload directory. Please check folder permissions.', 500, ['error' => $err['message'] ?? 'Unknown error']);
+    }
 }
 
 $fileCount = count($_FILES['photos']['name']);
@@ -62,11 +65,21 @@ for ($i = 0; $i < $fileCount; $i++) {
     $targetDirNormalized = str_replace(['\\', '/'], DIRECTORY_SEPARATOR, $targetDir);
     $targetFile = $targetDirNormalized . $filename;
 
-    if (move_uploaded_file($tmpName, $targetFile)) {
+    $moveResult = move_uploaded_file($tmpName, $targetFile);
+    if ($moveResult) {
         $uploadedFilenames[] = $filename;
-    } else if (copy($tmpName, $targetFile)) {
-        // Fallback for XAMPP Windows permission/temp folder quirks
-        $uploadedFilenames[] = $filename;
+        $_FILES['photos']['move_result'][$i] = true;
+    } else {
+        $err1 = error_get_last();
+        if (copy($tmpName, $targetFile)) {
+            // Fallback for XAMPP Windows permission/temp folder quirks
+            $uploadedFilenames[] = $filename;
+            $_FILES['photos']['move_result'][$i] = true;
+        } else {
+            $err2 = error_get_last();
+            $_FILES['photos']['move_result'][$i] = false;
+            $_FILES['photos']['move_error'][$i] = $err2 ? $err2['message'] : ($err1 ? $err1['message'] : 'Unknown move error');
+        }
     }
 }
 
