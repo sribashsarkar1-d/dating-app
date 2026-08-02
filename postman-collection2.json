@@ -212,6 +212,72 @@
                             ]
                         }
                     }
+                },
+                {
+                    "name": "Add Profile Prompt",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json",
+                                "type": "text"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"prompt_text\": \"A fun fact about me is...\"\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/api/add-profile-prompt.php",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "api",
+                                "add-profile-prompt.php"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Add Opening Move",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json",
+                                "type": "text"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"name\": \"What is your favorite book?\"\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/api/add-opening-move.php",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "api",
+                                "add-opening-move.php"
+                            ]
+                        }
+                    },
+                    "response": []
                 }
             ]
         },
@@ -412,6 +478,40 @@
                             ]
                         }
                     }
+                },
+                {
+                    "name": "Add Master Data",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json",
+                                "type": "text"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"category\": \"genders\",\n    \"name\": \"Non-Binary\"\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/api/master/add-master-data.php",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "api",
+                                "master",
+                                "add-master-data.php"
+                            ]
+                        }
+                    },
+                    "response": []
                 }
             ]
         },
@@ -804,6 +904,74 @@
                             ]
                         }
                     }
+                },
+                {
+                    "name": "Add Explore Interest",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json",
+                                "type": "text"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"name\": \"Photography\",\n    \"icon\": \"https://example.com/camera.png\"\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/api/explore/add-interest.php",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "api",
+                                "explore",
+                                "add-interest.php"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Add Explore Trending",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json",
+                                "type": "text"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"name\": \"Summer Vibes\",\n    \"image_url\": \"https://example.com/summer.png\"\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/api/explore/add-trending.php",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "api",
+                                "explore",
+                                "add-trending.php"
+                            ]
+                        }
+                    },
+                    "response": []
                 }
             ]
         }
