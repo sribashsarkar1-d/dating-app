@@ -15,7 +15,7 @@ if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
 
 try {
     $db = Database::getInstance();
-    $moves = $db->fetchAll("SELECT id, question FROM opening_move_questions WHERE status = 'ACTIVE' ORDER BY sort_order ASC, id ASC");
+    $moves = $db->fetchAll("SELECT id, name as question FROM opening_moves WHERE status = 'ACTIVE' ORDER BY display_order ASC, id ASC");
     
     $data = [];
     foreach ($moves as $move) {

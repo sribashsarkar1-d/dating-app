@@ -124,7 +124,7 @@ try {
                     $errors["opening_moves.{$index}.question_id"] = 'Duplicate question';
                 } else {
                     $moveIds[] = $qId;
-                    $isValid = $db->fetch("SELECT id FROM opening_move_questions WHERE id = ? AND status = 'ACTIVE'", [$qId]);
+                    $isValid = $db->fetch("SELECT id FROM opening_moves WHERE id = ? AND status = 'ACTIVE'", [$qId]);
                     if (!$isValid) {
                         $errors["opening_moves.{$index}.question_id"] = 'Invalid question.';
                     }

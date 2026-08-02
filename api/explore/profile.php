@@ -58,17 +58,17 @@ try {
     
     // Get Prompts
     $prompts = $db->fetchAll("
-        SELECT p.answer, q.question 
+        SELECT p.answer, q.prompt_text as question 
         FROM user_profile_prompts p 
-        JOIN profile_prompt_questions q ON p.question_id = q.id 
+        JOIN profile_prompts q ON p.question_id = q.id 
         WHERE p.user_id = ?
     ", [$targetId]);
     
     // Get Opening Moves
     $openingMoves = $db->fetchAll("
-        SELECT m.answer, m.custom_question, q.question 
+        SELECT m.answer, m.custom_question, q.name as question 
         FROM user_opening_moves m 
-        LEFT JOIN opening_move_questions q ON m.question_id = q.id 
+        LEFT JOIN opening_moves q ON m.question_id = q.id 
         WHERE m.user_id = ?
     ", [$targetId]);
     
