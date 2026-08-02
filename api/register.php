@@ -101,7 +101,7 @@ try {
                     $errors["profile_prompts.{$index}.question_id"] = 'Duplicate question';
                 } else {
                     $promptIds[] = $qId;
-                    $isValid = $db->fetch("SELECT id FROM profile_prompt_questions WHERE id = ? AND status = 'ACTIVE'", [$qId]);
+                    $isValid = $db->fetch("SELECT id FROM profile_prompts WHERE id = ? AND deleted_at IS NULL", [$qId]);
                     if (!$isValid) {
                         $errors["profile_prompts.{$index}.question_id"] = 'Invalid question.';
                     }
