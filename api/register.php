@@ -63,7 +63,17 @@ try {
     if (!$dob) $errors['birth_date'] = 'Required';
     
     $showMe = Validator::sanitizeString($input['show_me'] ?? '');
-    if (!$showMe) $errors['show_me'] = 'Required';
+    $showMeId = null;
+    if (!$showMe) {
+        $errors['show_me'] = 'Required';
+    } else {
+        $showMeRecord = $db->fetch("SELECT id FROM show_me WHERE name = ?", [$showMe]);
+        if ($showMeRecord) {
+            $showMeId = $showMeRecord['id'];
+        } else {
+            $errors['show_me'] = 'Invalid option';
+        }
+    }
     
     $height = $input['height'] ?? null;
     if ($height !== null && !is_numeric($height)) {
@@ -154,7 +164,7 @@ try {
     }
     
     $genderId = $input['gender_identity_id'] ?? null;
-    $interestedInId = $input['interested_in_id'] ?? null;
+    $interestedInId = $showMeId ?? ($input['interested_in_id'] ?? null);
     $relGoalId = $input['relationship_goal_id'] ?? null;
     $bio = Validator::sanitizeString($input['about'] ?? null);
     $educationId = $input['education_id'] ?? null;
@@ -202,9 +212,9 @@ try {
         
         // Update Profile (Trigger already created the row)
         $db->query(
-            "UPDATE user_profiles SET bio = ?, education_id = ?, religion_id = ?, political_view_id = ?, smoking_id = ?, drinking_id = ?, fitness_id = ?, sleep_id = ?, diet_id = ?, children_id = ?, communication_style_id = ?, is_verified = 0, zodiac_sign = ?, show_me = ?, height_cm = ?, hometown = ?, language_spoken = ?, job_title = ?, company = ?, updated_at = NOW() 
+            "UPDATE user_profiles SET bio = ?, education_id = ?, religion_id = ?, political_view_id = ?, smoking_id = ?, drinking_id = ?, fitness_id = ?, sleep_id = ?, diet_id = ?, children_id = ?, communication_style_id = ?, is_verified = 0, zodiac_sign = ?, height_cm = ?, hometown = ?, language_spoken = ?, job_title = ?, company = ?, updated_at = NOW() 
              WHERE user_id = ?",
-            [$bio, $educationId, $religionId, $politicalViewId, $smokingId, $drinkingId, $fitnessId, $sleepId, $dietId, $childrenId, $connStyleId, $zodiacSign, $showMe, $height, $hometown, $languageSpoken, $jobTitle, $company, $userId]
+            [$bio, $educationId, $religionId, $politicalViewId, $smokingId, $drinkingId, $fitnessId, $sleepId, $dietId, $childrenId, $connStyleId, $zodiacSign, $height, $hometown, $languageSpoken, $jobTitle, $company, $userId]
         );
         
         // Save Profile Prompts
